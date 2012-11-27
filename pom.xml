@@ -16,9 +16,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<currentYear>2012</currentYear>
-		<minecraftVersion>1.3.2</minecraftVersion>
+		<minecraftVersion>1.4.5</minecraftVersion>
 		<lwjglVersion>2.4</lwjglVersion>
-		<mcpVersion>72</mcpVersion>
+		<mcpVersion>723</mcpVersion>
 		<buildNumber>0</buildNumber>
 	</properties>
 
