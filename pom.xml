@@ -902,6 +902,70 @@
 				</plugins>
 			</build>
 		</profile>
+		<!-- For final release JAR only on Unix/Mac -->
+		<profile>
+			<id>mcp-final-travis</id>
+			<build>
+				<plugins>
+					<!-- Program executor plugin -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<executions>
+							<!-- Reobfuscate Minecraft using MCP -->
+							<execution>
+								<id>reobfuscate-mc</id>
+								<configuration>
+									<executable>python</executable>
+									<arguments>
+										<argument>runtime/reobfuscate.py</argument>
+										<argument>"$@"</argument>
+									</arguments>
+								</configuration>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- File downloading plugin -->
+					<plugin>
+						<groupId>com.github.goldin</groupId>
+						<artifactId>copy-maven-plugin</artifactId>
+						<version>0.2.5</version>
+						<executions>
+							<!-- Copy compiled classes to target directory -->
+							<execution>
+								<id>copy-compiled</id>
+								<configuration>
+									<verbose>false</verbose>
+									<resources>
+										<resource>
+											<runIf>
+												{{
+													if (new File(project.basedir, "target").isDirectory()) { return true; }
+													return false;
+												}}
+											</runIf>
+											<directory>${project.basedir}/reobf/minecraft</directory>
+											<targetPath>${project.basedir}/target/classes</targetPath>
+											<include>**/*</include>
+											<preservePath>true</preservePath>
+										</resource>
+									</resources>
+								</configuration>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 </project>
