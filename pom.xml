@@ -772,14 +772,12 @@
 									<verbose>false</verbose>
 									<resources>
 										<resource>
-											<!--<runIf>
+											<runIf>
 												{{
 													if (new File(project.basedir, "target").isDirectory()) { return true; }
 													return false;
 												}}
 											</runIf>
-											-->
-											<runIf>{{ osName.contains("Windows") }}</runIf>
 											<directory>${project.basedir}/reobf/minecraft</directory>
 											<targetPath>${project.basedir}/target/classes</targetPath>
 											<include>**/*</include>
