@@ -111,6 +111,13 @@
 					<include>LICENSE.txt</include>
 				</includes>
 			</resource>
+			<!-- added by theory -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
 		</resources>
 
 		<!-- Build plugins -->
@@ -213,6 +220,7 @@
 											<version>${lwjglVersion}</version>
 											<stripVersion>true</stripVersion>
 										</dependency>
+										<!-- COMMENTED BY THEORY
 										<dependency>
 											<groupId>de.cuina.fireandfuel</groupId>
 											<artifactId>codecjlayermp3</artifactId>
@@ -273,6 +281,7 @@
 											<version>3.0.3</version>
 											<stripVersion>true</stripVersion>
 										</dependency>
+										-->
 									</dependencies>
 								</resource>
 								<!-- Copy LWJGL jars to MCP bin folder -->
