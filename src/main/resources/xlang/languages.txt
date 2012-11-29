@@ -1,0 +1,2 @@
+﻿
+en_US=English (US)

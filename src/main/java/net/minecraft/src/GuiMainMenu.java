@@ -109,7 +109,7 @@ public class GuiMainMenu extends GuiScreen
 		this.drawTexturedModalRect(var6 + 0, var7 + 0, 0, 0, 155, 44);
 		this.drawTexturedModalRect(var6 + 155, var7 + 0, 0, 45, 155, 44);
 
-        String emberTag = "Ember 0.1";
+        String emberTag = "Ember 0.1.2";
         String var9 = "Minecraft 1.4.5";
 
         this.drawString(this.fontRenderer, var9, 2, this.height - 10, 16777215);
