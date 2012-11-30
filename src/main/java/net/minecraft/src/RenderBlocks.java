@@ -430,7 +430,7 @@ public class RenderBlocks
 		//EMBER START
 		if(par1Block.usesEmberTerrain){
 			Tessellator.instance.draw();
-			Minecraft.theMinecraft.renderEngine.getTexture("/exterrain.png");
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, Minecraft.theMinecraft.renderEngine.getTexture("/exterrain.png"));
 			Tessellator.instance.startDrawingQuads();
 		}
 		//EMBER END
@@ -441,7 +441,7 @@ public class RenderBlocks
 		//EMBER START
 		if(par1Block.usesEmberTerrain){
 			Tessellator.instance.draw();
-			Minecraft.theMinecraft.renderEngine.getTexture("/terrain.png");
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, Minecraft.theMinecraft.renderEngine.getTexture("/terrain.png"));
 			Tessellator.instance.startDrawingQuads();
 		}
 		//EMBER END
@@ -6526,6 +6526,11 @@ public class RenderBlocks
      */
     public void renderBlockAsItem(Block par1Block, int par2, float par3)
     {
+		//EMBER START
+		if(par1Block.usesEmberTerrain){
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, Minecraft.theMinecraft.renderEngine.getTexture("/exterrain.png"));
+		}
+		//EMBER END
         Tessellator var4 = Tessellator.instance;
         boolean var5 = par1Block.blockID == Block.grass.blockID;
         int var6;
@@ -7020,6 +7025,11 @@ public class RenderBlocks
             var4.draw();
             GL11.glTranslatef(0.5F, 0.5F, 0.5F);
         }
+		//EMBER START
+		if(par1Block.usesEmberTerrain){
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, Minecraft.theMinecraft.renderEngine.getTexture("/terrain.png"));
+		}
+		//EMBER END
     }
 
     /**

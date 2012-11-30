@@ -468,7 +468,6 @@ tile.cobbleWall.normal.name=Cobblestone Wall
 tile.cobbleWall.mossy.name=Mossy Cobblestone Wall
 tile.carrots.name=Carrots
 tile.potatoes.name=Potatoes
-tile.dragonstone.name=Dragonstone
 
 item.shovelIron.name=Iron Shovel
 item.pickaxeIron.name=Iron Pickaxe
@@ -1085,3 +1084,8 @@ advMode.allPlayers=Use "@a" to target all players
 
 advMode.notEnabled=Command blocks are not enabled on this server
 advMode.notAllowed=Must be an opped player in creative mode
+
+
+tile.dragonstone.name=Dragonstone
+tile.dragonstone0.name=Dragonstone
+tile.dragonstone1.name=Chipped Dragonstone

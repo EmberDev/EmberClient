@@ -204,7 +204,7 @@ public class Block
     public static final Block anvil = (new BlockAnvil(145)).setHardness(5.0F).setStepSound(soundAnvilFootstep).setResistance(2000.0F).setBlockName("anvil").setRequiresSelfNotify();
 
 	// EMBER START
-    public static final Block dragonstone = (new BlockDragonstone(255, 37)).setHardness(80.0F).setResistance(2000.0F).setStepSound(soundStoneFootstep).setBlockName("dragonstone").setUsesEmberTerrain().setRequiresSelfNotify();
+    public static final Block dragonstone = (new BlockDragonstone(255, 0)).setHardness(80.0F).setResistance(2000.0F).setStepSound(soundStoneFootstep).setBlockName("dragonstone").setUsesEmberTerrain().setRequiresSelfNotify();
 	
 	public boolean usesEmberTerrain;
 	public Block setUsesEmberTerrain(){this.usesEmberTerrain = true; return this;}
@@ -1259,7 +1259,9 @@ public class Block
         Item.itemsList[pistonStickyBase.blockID] = new ItemPiston(pistonStickyBase.blockID - 256);
         Item.itemsList[cobblestoneWall.blockID] = (new ItemMultiTextureTile(cobblestoneWall.blockID - 256, cobblestoneWall, BlockWall.types)).setItemName("cobbleWall");
         Item.itemsList[anvil.blockID] = (new ItemAnvilBlock(anvil)).setItemName("anvil");
-
+		//EMBER START
+		        Item.itemsList[dragonstone.blockID] = (new ItemDragonstone(dragonstone.blockID - 256)).setItemName("dragonstone");
+		//EMBER END
         for (int var0 = 0; var0 < 256; ++var0)
         {
             if (blocksList[var0] != null)
