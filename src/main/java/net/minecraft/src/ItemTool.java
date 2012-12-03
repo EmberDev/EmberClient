@@ -1,5 +1,6 @@
 package net.minecraft.src;
 import java.util.Random; //EMBER
+import java.lang.Math; //EMBER
 
 public class ItemTool extends Item
 {
@@ -25,6 +26,7 @@ public class ItemTool extends Item
         this.setCreativeTab(CreativeTabs.tabTools);
     }
 
+
     /**
      * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
      * sword
@@ -35,12 +37,32 @@ public class ItemTool extends Item
         {
             if (this.blocksEffectiveAgainst[var3] == par2Block)
             {
-                return this.efficiencyOnProperMaterial;
+				//EMBER START
+				//This governs block break bonus speed for picks and shovels (which extend ItemTool)
+				//swords and hoes are similar, but not neccessarily the same. See their classes for more detail.
+				
+				//original:   return this.efficiencyOnProperMaterial;
+				return getStrVsGoodBlock(par1ItemStack); //so we only have to code once
+
+				//EMBER END
             }
         }
 
-        return 1.0F;
+        return 0.05F; //EMBER- decreased from 1.0 to 0.1. use your tools!
     }
+	
+	//EMBER START - skip the block arg for when its already known
+    public float getStrVsGoodBlock(ItemStack par1ItemStack)
+    {	
+		//import the stats for the current tool, return 0.1F if they don't exist
+		NBTTagCompound toolStats = par1ItemStack.stackTagCompound == null ? null : par1ItemStack.stackTagCompound.getCompoundTag("tstats");
+		if(toolStats == null) return 0.05F;
+		
+		//determine efficiency from the sharpness stat
+		float efficiencyAtSharpness100 = 5.0F;
+		return 0.5F + (efficiencyAtSharpness100 * (float)(2.5D-(2.5D/(Math.pow(250D,(((double)toolStats.getShort("sharpness"))/250D))))));
+	}
+	//EMBER END
 
     /**
      * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
@@ -65,9 +87,20 @@ public class ItemTool extends Item
     /**
      * Returns the damage against a given entity.
      */
-    public int getDamageVsEntity(Entity par1Entity)
+    public int getDamageVsEntity(Entity par1Entity, ItemStack i)
     {
-        return this.damageVsEntity;
+		//EMBER START
+        // original: //return this.damageVsEntity;
+		//import the stats for the current tool, return 0.1F if they don't exist
+		NBTTagCompound toolStats = i.stackTagCompound == null ? null : i.stackTagCompound.getCompoundTag("tstats");
+		if(toolStats == null) return 1;
+		
+		//determine efficiency from the sharpness stat
+		float efficiencyAtSharpness100 = 50.0F;
+		//penalized by 50% for not being a sword
+		return (int)((efficiencyAtSharpness100 * (float)(2.5D-(2.5D/(Math.pow(250D,(((double)toolStats.getShort("sharpness"))/250D)))))) * 0.5F);
+		
+		//EMBER END
     }
 
     /**

@@ -315,9 +315,9 @@ public final class ItemStack
     /**
      * Returns the damage against a given entity.
      */
-    public int getDamageVsEntity(Entity par1Entity)
+    public int getDamageVsEntity(Entity par1Entity, ItemStack i) //EMBER, add arg for item
     {
-        return Item.itemsList[this.itemID].getDamageVsEntity(par1Entity);
+        return Item.itemsList[this.itemID].getDamageVsEntity(par1Entity, i); //EMBER - pass item
     }
 
     /**
@@ -520,7 +520,10 @@ public final class ItemStack
 
         if (this.hasDisplayName())
         {
-            var5 = "\u00a7o" + var5 + "\u00a7r";
+			//EMBER START
+            //commented the following line to disable the "italics" effect. eventually we want to check if a *player* renamed an item, and use italics only then.
+            //var5 = "\u00a7o" + var5 + "\u00a7r";
+			//EMBER END
         }
 
         if (par2)

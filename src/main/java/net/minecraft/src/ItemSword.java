@@ -34,10 +34,22 @@ public class ItemSword extends Item
         else
         {
             Material var3 = par2Block.blockMaterial;
-            return var3 != Material.plants && var3 != Material.vine && var3 != Material.field_76261_t && var3 != Material.leaves && var3 != Material.pumpkin ? 1.0F : 1.5F;
+            return var3 != Material.plants && var3 != Material.vine && var3 != Material.field_76261_t && var3 != Material.leaves && var3 != Material.pumpkin ? 0.1F : getStrVsGoodBlock(par1ItemStack); //EMBER
         }
     }
-
+	//EMBER START - skip the block arg for when its already known
+    public float getStrVsGoodBlock(ItemStack par1ItemStack)
+    {	
+		//import the stats for the current tool, return 0.1F if they don't exist
+		NBTTagCompound toolStats = par1ItemStack.stackTagCompound == null ? null : par1ItemStack.stackTagCompound.getCompoundTag("tstats");
+		if(toolStats == null) return 0.05F;
+		
+		//determine efficiency from the sharpness stat
+		float efficiencyAtSharpness100 = 5.0F;
+		return 0.5F + (efficiencyAtSharpness100 * (float)(2.5D-(2.5D/(Math.pow(250D,(((double)toolStats.getShort("sharpness"))/250D))))));
+	}
+	//EMBER END
+	
     /**
      * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
      * the damage on the stack.
@@ -61,9 +73,19 @@ public class ItemSword extends Item
     /**
      * Returns the damage against a given entity.
      */
-    public int getDamageVsEntity(Entity par1Entity)
+    public int getDamageVsEntity(Entity par1Entity, ItemStack i)
     {
-        return this.weaponDamage;
+		//EMBER START
+        // original: //return this.damageVsEntity;
+		//import the stats for the current tool, return 0.1F if they don't exist
+		NBTTagCompound toolStats = i.stackTagCompound == null ? null : i.stackTagCompound.getCompoundTag("tstats");
+		if(toolStats == null) return 1;
+		
+		//determine efficiency from the sharpness stat
+		float efficiencyAtSharpness100 = 50.0F;
+		return (int)(efficiencyAtSharpness100 * (float)(2.5D-(2.5D/(Math.pow(250D,(((double)toolStats.getShort("sharpness"))/250D))))));
+		
+		//EMBER END
     }
 
     /**
