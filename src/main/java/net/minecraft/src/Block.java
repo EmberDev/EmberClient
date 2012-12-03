@@ -205,6 +205,7 @@ public class Block
 
 	// EMBER START
     public static final Block dragonstone = (new BlockDragonstone(255, 0)).setHardness(80.0F).setResistance(2000.0F).setStepSound(soundStoneFootstep).setBlockName("dragonstone").setUsesEmberTerrain().setRequiresSelfNotify();
+    public static final Block bloodrack = (new BlockBloodrack(254, 2)).setHardness(0.5F).setResistance(2500.0F).setStepSound(soundStoneFootstep).setBlockName("bloodrack").setUsesEmberTerrain();
 	
 	public boolean usesEmberTerrain;
 	public Block setUsesEmberTerrain(){this.usesEmberTerrain = true; return this;}
