@@ -243,6 +243,17 @@ public final class ItemStack
      */
     public int getMaxDamage()
     {
+		//EMBER START
+		if(Item.itemsList[this.itemID].isItemTool(this)){
+			//import the stats for the current tool, return default if they don't exist
+			NBTTagCompound toolStats = this.stackTagCompound == null ? null : this.stackTagCompound.getCompoundTag("tstats");
+			if(toolStats == null) return Item.itemsList[this.itemID].getMaxDamage();
+			
+			//determine efficiency from the sharpness stat
+			float durabilityAtHardness100 = 2500.0F;
+			return (int)(durabilityAtHardness100 * (float)(2.5D-(2.5D/(Math.pow(250D,(((double)toolStats.getShort("hardness"))/250D))))));
+		}
+		//EMBER END
         return Item.itemsList[this.itemID].getMaxDamage();
     }
 
@@ -558,6 +569,10 @@ public final class ItemStack
 			//EMBER START
 			//tooltip for tool stats
 			if(this.getItem().isItemTool(this)){
+				//show item durability
+				var3.add("Durability: " + (this.getMaxDamage() - this.getItemDamageForDisplay()) + " / " + this.getMaxDamage());
+				
+				
 				NBTTagCompound toolStats = this.stackTagCompound == null ? null : this.stackTagCompound.getCompoundTag("tstats");
 				if(toolStats != null){
 					var3.add("Hardness: " + toolStats.getShort("hardness"));
@@ -616,12 +631,6 @@ public final class ItemStack
                 }
             }
         }
-
-        if (par2 && this.isItemDamaged())
-        {
-            var3.add("Durability: " + (this.getMaxDamage() - this.getItemDamageForDisplay()) + " / " + this.getMaxDamage());
-        }
-
         return var3;
     }
 
