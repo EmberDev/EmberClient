@@ -1,28 +1,24 @@
 package net.minecraft.src;
 import java.util.Random; //EMBER
 
-public class ItemTool extends Item
+public class ItemSword extends Item
 {
-    /** Array of blocks the tool has extra effect against. */
-    private Block[] blocksEffectiveAgainst;
-    protected float efficiencyOnProperMaterial = 4.0F;
+    private int weaponDamage;
+    private final EnumToolMaterial toolMaterial;
 
-    /** Damage versus entities. */
-    private int damageVsEntity;
-
-    /** The material this tool is made from. */
-    protected EnumToolMaterial toolMaterial;
-
-    protected ItemTool(int par1, int par2, EnumToolMaterial par3EnumToolMaterial, Block[] par4ArrayOfBlock)
+    public ItemSword(int par1, EnumToolMaterial par2EnumToolMaterial)
     {
         super(par1);
-        this.toolMaterial = par3EnumToolMaterial;
-        this.blocksEffectiveAgainst = par4ArrayOfBlock;
+        this.toolMaterial = par2EnumToolMaterial;
         this.maxStackSize = 1;
-        this.setMaxDamage(par3EnumToolMaterial.getMaxUses());
-        this.efficiencyOnProperMaterial = par3EnumToolMaterial.getEfficiencyOnProperMaterial();
-        this.damageVsEntity = par2 + par3EnumToolMaterial.getDamageVsEntity();
-        this.setCreativeTab(CreativeTabs.tabTools);
+        this.setMaxDamage(par2EnumToolMaterial.getMaxUses());
+        this.setCreativeTab(CreativeTabs.tabCombat);
+        this.weaponDamage = 4 + par2EnumToolMaterial.getDamageVsEntity();
+    }
+
+    public int func_82803_g()
+    {
+        return this.toolMaterial.getDamageVsEntity();
     }
 
     /**
@@ -31,15 +27,15 @@ public class ItemTool extends Item
      */
     public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
-        for (int var3 = 0; var3 < this.blocksEffectiveAgainst.length; ++var3)
+        if (par2Block.blockID == Block.web.blockID)
         {
-            if (this.blocksEffectiveAgainst[var3] == par2Block)
-            {
-                return this.efficiencyOnProperMaterial;
-            }
+            return 15.0F;
         }
-
-        return 1.0F;
+        else
+        {
+            Material var3 = par2Block.blockMaterial;
+            return var3 != Material.plants && var3 != Material.vine && var3 != Material.field_76261_t && var3 != Material.leaves && var3 != Material.pumpkin ? 1.0F : 1.5F;
+        }
     }
 
     /**
@@ -48,7 +44,7 @@ public class ItemTool extends Item
      */
     public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
     {
-        par1ItemStack.damageItem(2, par3EntityLiving);
+        par1ItemStack.damageItem(1, par3EntityLiving);
         return true;
     }
 
@@ -56,7 +52,7 @@ public class ItemTool extends Item
     {
         if ((double)Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
         {
-            par1ItemStack.damageItem(1, par7EntityLiving);
+            par1ItemStack.damageItem(2, par7EntityLiving);
         }
 
         return true;
@@ -67,7 +63,7 @@ public class ItemTool extends Item
      */
     public int getDamageVsEntity(Entity par1Entity)
     {
-        return this.damageVsEntity;
+        return this.weaponDamage;
     }
 
     /**
@@ -79,6 +75,39 @@ public class ItemTool extends Item
     }
 
     /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    {
+        return EnumAction.block;
+    }
+
+    /**
+     * How long it takes to use or consume an item
+     */
+    public int getMaxItemUseDuration(ItemStack par1ItemStack)
+    {
+        return 72000;
+    }
+
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+    {
+        par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+        return par1ItemStack;
+    }
+
+    /**
+     * Returns if the item (tool) can harvest results from the block type.
+     */
+    public boolean canHarvestBlock(Block par1Block)
+    {
+        return par1Block.blockID == Block.web.blockID;
+    }
+
+    /**
      * Return the enchantability factor of the item, most of the time is based on material.
      */
     public int getItemEnchantability()
@@ -86,10 +115,7 @@ public class ItemTool extends Item
         return this.toolMaterial.getEnchantability();
     }
 
-    /**
-     * Return the name for this tool's material.
-     */
-    public String getToolMaterialName()
+    public String func_77825_f()
     {
         return this.toolMaterial.toString();
     }
@@ -101,8 +127,6 @@ public class ItemTool extends Item
     {
         return this.toolMaterial.getToolCraftingMaterial() == par2ItemStack.itemID ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
     }
-	
-
 	//EMBER START -- BE SURE TO MIRROR THIS IN ITEMSWORD AND ITEMHOE
 	public short getBaseToolStat(int code, ItemStack par1ItemStack){
 		String itemName = getItemNameIS(par1ItemStack);

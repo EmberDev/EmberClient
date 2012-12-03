@@ -1,73 +1,55 @@
 package net.minecraft.src;
 import java.util.Random; //EMBER
 
-public class ItemTool extends Item
+public class ItemHoe extends Item
 {
-    /** Array of blocks the tool has extra effect against. */
-    private Block[] blocksEffectiveAgainst;
-    protected float efficiencyOnProperMaterial = 4.0F;
+    protected EnumToolMaterial theToolMaterial;
 
-    /** Damage versus entities. */
-    private int damageVsEntity;
-
-    /** The material this tool is made from. */
-    protected EnumToolMaterial toolMaterial;
-
-    protected ItemTool(int par1, int par2, EnumToolMaterial par3EnumToolMaterial, Block[] par4ArrayOfBlock)
+    public ItemHoe(int par1, EnumToolMaterial par2EnumToolMaterial)
     {
         super(par1);
-        this.toolMaterial = par3EnumToolMaterial;
-        this.blocksEffectiveAgainst = par4ArrayOfBlock;
+        this.theToolMaterial = par2EnumToolMaterial;
         this.maxStackSize = 1;
-        this.setMaxDamage(par3EnumToolMaterial.getMaxUses());
-        this.efficiencyOnProperMaterial = par3EnumToolMaterial.getEfficiencyOnProperMaterial();
-        this.damageVsEntity = par2 + par3EnumToolMaterial.getDamageVsEntity();
+        this.setMaxDamage(par2EnumToolMaterial.getMaxUses());
         this.setCreativeTab(CreativeTabs.tabTools);
     }
 
     /**
-     * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
-     * sword
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
      */
-    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
-        for (int var3 = 0; var3 < this.blocksEffectiveAgainst.length; ++var3)
+        if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6, par7, par1ItemStack))
         {
-            if (this.blocksEffectiveAgainst[var3] == par2Block)
+            return false;
+        }
+        else
+        {
+            int var11 = par3World.getBlockId(par4, par5, par6);
+            int var12 = par3World.getBlockId(par4, par5 + 1, par6);
+
+            if ((par7 == 0 || var12 != 0 || var11 != Block.grass.blockID) && var11 != Block.dirt.blockID)
             {
-                return this.efficiencyOnProperMaterial;
+                return false;
+            }
+            else
+            {
+                Block var13 = Block.tilledField;
+                par3World.playSoundEffect((double)((float)par4 + 0.5F), (double)((float)par5 + 0.5F), (double)((float)par6 + 0.5F), var13.stepSound.getStepSound(), (var13.stepSound.getVolume() + 1.0F) / 2.0F, var13.stepSound.getPitch() * 0.8F);
+
+                if (par3World.isRemote)
+                {
+                    return true;
+                }
+                else
+                {
+                    par3World.setBlockWithNotify(par4, par5, par6, var13.blockID);
+                    par1ItemStack.damageItem(1, par2EntityPlayer);
+                    return true;
+                }
             }
         }
-
-        return 1.0F;
-    }
-
-    /**
-     * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
-     * the damage on the stack.
-     */
-    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
-    {
-        par1ItemStack.damageItem(2, par3EntityLiving);
-        return true;
-    }
-
-    public boolean onBlockDestroyed(ItemStack par1ItemStack, World par2World, int par3, int par4, int par5, int par6, EntityLiving par7EntityLiving)
-    {
-        if ((double)Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
-        {
-            par1ItemStack.damageItem(1, par7EntityLiving);
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns the damage against a given entity.
-     */
-    public int getDamageVsEntity(Entity par1Entity)
-    {
-        return this.damageVsEntity;
     }
 
     /**
@@ -78,31 +60,11 @@ public class ItemTool extends Item
         return true;
     }
 
-    /**
-     * Return the enchantability factor of the item, most of the time is based on material.
-     */
-    public int getItemEnchantability()
+    public String func_77842_f()
     {
-        return this.toolMaterial.getEnchantability();
-    }
-
-    /**
-     * Return the name for this tool's material.
-     */
-    public String getToolMaterialName()
-    {
-        return this.toolMaterial.toString();
-    }
-
-    /**
-     * Return whether this item is repairable in an anvil.
-     */
-    public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
-    {
-        return this.toolMaterial.getToolCraftingMaterial() == par2ItemStack.itemID ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+        return this.theToolMaterial.toString();
     }
 	
-
 	//EMBER START -- BE SURE TO MIRROR THIS IN ITEMSWORD AND ITEMHOE
 	public short getBaseToolStat(int code, ItemStack par1ItemStack){
 		String itemName = getItemNameIS(par1ItemStack);
@@ -217,4 +179,5 @@ public class ItemTool extends Item
 	}
 	
 	//EMBER END
+	
 }
