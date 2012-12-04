@@ -58,6 +58,8 @@ public class BlockDragonstone extends BlockStone
 		//this is a temporary data cycler for debugging purposes
         //par1World.setBlockMetadata(par2, par3, par4, (par1World.getBlockMetadata(par2, par3, par4) == 0) ? 1 : 0);
 		//return true;
+		par5EntityPlayer.eStatAgility++; //testing character stats
+		par5EntityPlayer.addChatMessage("Your agility has been increased.");
 		return false;
     }
 }
